@@ -9,7 +9,7 @@ local PlayerStatsService = require(script.Parent.Parent.Economy.PlayerStatsServi
 
 local QuestService = {}
 
-local QUEST_ID = "Q1_PLAYGROUND"
+local QUEST_ID = Constants.QUESTS.Q1_PLAYGROUND
 local NEXT_QUEST_ID = "Q2_PLACEHOLDER"
 
 local SWING_PUSH_GOAL = 10

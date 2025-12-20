@@ -223,18 +223,24 @@ function WorldBuilder.ensurePlayground(baseplate, homeSpawn)
   local baseCenter = Vector3.new(playgroundCenter.X + 30, GROUND_Y + 0.5, playgroundCenter.Z)
 
   local basePieces = findOrCreateModel(merryModel, Constants.NAMES.MerryGoRoundBasePieces)
-  local baseRadius = 6.5
+  for _, child in ipairs(basePieces:GetChildren()) do
+    child:Destroy()
+  end
+
+  local baseRadius = 6
   for i = 1, 8 do
-    local piece = findOrCreatePart(basePieces, "BasePiece" .. i, "Part")
-    applyPhysics(piece, true, true, false)
-    piece.Size = Vector3.new(4, 1, 6)
+    local wedge = Instance.new("WedgePart")
+    wedge.Name = "BaseWedge" .. i
+    wedge.Parent = basePieces
+    applyPhysics(wedge, true, true, false)
+    wedge.Size = Vector3.new(6, 1, 6)
+    wedge.Material = Enum.Material.SmoothPlastic
+    wedge.BrickColor = BrickColor.new("Bright red")
+
     local angle = math.rad((i - 1) * 45)
-    piece.CFrame = CFrame.new(baseCenter)
-      * CFrame.Angles(0, angle, 0)
-      * CFrame.new(baseRadius, 0, 0)
-      * CFrame.Angles(0, math.rad(90), 0)
-    piece.Material = Enum.Material.SmoothPlastic
-    piece.BrickColor = BrickColor.new("Bright red")
+    local outward = Vector3.new(math.cos(angle), 0, math.sin(angle))
+    local position = baseCenter + (outward * baseRadius)
+    wedge.CFrame = CFrame.lookAt(position, position + outward) * CFrame.Angles(0, math.rad(90), 0)
   end
 
   local merryBase = findOrCreatePart(merryModel, Constants.NAMES.MerryGoRoundBase, "Part")
