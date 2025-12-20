@@ -15,8 +15,12 @@ function SlideBuilder.Build(playground, constants)
   local GROUND_Y = context.surfaceY
   local slideModel = BuilderUtil.findOrCreateModel(playground, constants.NAMES.Slide)
 
-  for _, child in ipairs(slideModel:GetDescendants()) do
-    if child.Name:match("_Unexpected$") or child:IsA("TrussPart") then
+  for _, child in ipairs(playground:GetDescendants()) do
+    if child:IsA("TrussPart") then
+      if child:IsDescendantOf(slideModel) or child.Name:lower():find("slide") then
+        child:Destroy()
+      end
+    elseif child.Name:match("_Unexpected$") and child:IsDescendantOf(slideModel) then
       child:Destroy()
     end
   end
@@ -62,6 +66,10 @@ function SlideBuilder.Build(playground, constants)
   support.BrickColor = BrickColor.new("Dark stone grey")
 
   local ladderModel = BuilderUtil.findOrCreateModel(slideModel, "SlideLadder")
+  local oldStep = slideModel:FindFirstChild("LadderTopStep", true)
+  if oldStep and oldStep:IsA("BasePart") then
+    oldStep:Destroy()
+  end
   local ladderHeight = PLATFORM_Y - GROUND_Y
   local ladderWidth = 4
   local railThickness = 0.4

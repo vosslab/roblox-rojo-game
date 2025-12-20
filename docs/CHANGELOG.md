@@ -44,6 +44,8 @@
 - Document the world builder/interactable modular pattern in `docs/ROBLOX_LUA_STYLE.md`.
 - Remove an unused RunService require from Swing interactable.
 - Clean up old slide geometry (unexpected parts/trusses) during slide build.
+- Remove any leftover slide truss parts under the playground to eliminate the blocking platform.
+- Remove any leftover LadderTopStep parts from the slide ladder build.
 - Silence repeated DataStore warnings in Studio by skipping DataStore calls unless published.
 - Move swing push/impulse logic into `World/Interactables/Swing.lua`.
 - Replace the Lune runner with a filesystem-based `tests/run.luau` smoke test entrypoint.
