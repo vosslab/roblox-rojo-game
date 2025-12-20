@@ -7,10 +7,12 @@ local merryAngularSpeed = 0
 local pushTimes = {}
 local lastPrintSecond = nil
 
+local DEBUG_MERRY = false
+
 local PUSH_DEBOUNCE = 0.35
-local SPEED_INCREMENT = 3.0
+local SPEED_INCREMENT = 2.0
 local MAX_SPEED = 12
-local FRICTION = 0.98
+local FRICTION = 0.96
 local STOP_THRESHOLD = 0.05
 
 local function isValidSeat(seat)
@@ -71,6 +73,9 @@ function MerryGoRound.Init(playgroundModel, constantsModule, _remotes)
   merryAngularSpeed = 0
   pushTimes = {}
   lastPrintSecond = nil
+  if DEBUG_MERRY then
+    print("[MerryGoRound] Update loop connected")
+  end
 end
 
 function MerryGoRound.Push(player)
@@ -91,7 +96,9 @@ function MerryGoRound.Push(player)
   pushTimes[player] = now
 
   merryAngularSpeed = math.min(merryAngularSpeed + SPEED_INCREMENT, MAX_SPEED)
-  print("SpinPush accepted", player.Name, "speed", merryAngularSpeed)
+  if DEBUG_MERRY then
+    print("SpinPush accepted", player.Name, "speed", merryAngularSpeed)
+  end
   return true
 end
 
@@ -113,12 +120,12 @@ function MerryGoRound.Update(dt)
     local center = cached.merryBase.Position
     local deltaAngle = merryAngularSpeed * dt
 
-    if doPrint then
-      print("Heartbeat rotating", "speed", merryAngularSpeed)
+    if doPrint and DEBUG_MERRY then
+      print("[MerryGoRound] rotating", merryAngularSpeed)
     end
 
     local marker = cached.merryModel:FindFirstChild("SpinMarker", true)
-    if doPrint and marker and marker:IsA("BasePart") then
+    if doPrint and DEBUG_MERRY and marker and marker:IsA("BasePart") then
       print("SpinMarker before", marker.Position)
     end
 
@@ -132,7 +139,7 @@ function MerryGoRound.Update(dt)
       cached.merryModel:PivotTo(rotated)
     end
 
-    if doPrint and marker and marker:IsA("BasePart") then
+    if doPrint and DEBUG_MERRY and marker and marker:IsA("BasePart") then
       print("SpinMarker after", marker.Position)
     end
 

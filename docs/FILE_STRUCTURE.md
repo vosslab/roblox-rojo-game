@@ -15,9 +15,12 @@
   - `Economy/`: coins, upgrades, and passive income.
   - `Quests/`: quest definitions and quest state logic.
   - `Persistence/`: DataStore load/save utilities.
+  - `Dev/`: Studio-only diagnostics and validators (loaded only in Studio).
 - `ReplicatedStorage/`:
   - `Shared/Constants.lua`: shared names, tags, and remote names.
-  - `Remotes/`: RemoteEvents created at runtime if missing.
+  - `Shared/Types.lua`: optional shared type definitions.
+  - `Shared/Util/`: tiny shared helpers safe for client/server.
+  - `Remotes/`: RemoteEvents (authored in src when possible; created at runtime as fallback).
 - `StarterPlayer/StarterPlayerScripts/`:
   - `ClientMain.client.lua`: client entry point.
   - `UI/`: quest UI and stats UI modules.

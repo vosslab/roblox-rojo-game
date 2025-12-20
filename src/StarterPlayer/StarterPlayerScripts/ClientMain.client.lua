@@ -4,10 +4,13 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local shared = ReplicatedStorage:WaitForChild("Shared")
 local Constants = require(shared:WaitForChild("Constants"))
 
-local QuestUI = require(script.Parent.UI.QuestUI)
-local ArrowController = require(script.Parent.UI.ArrowController)
-local StatsUI = require(script.Parent.UI.StatsUI)
-local InputController = require(script.Parent.Input.InputController)
+local uiFolder = script.Parent:WaitForChild("UI")
+local inputFolder = script.Parent:WaitForChild("Input")
+
+local QuestUI = require(uiFolder:WaitForChild("QuestUI"))
+local ArrowController = require(uiFolder:WaitForChild("ArrowController"))
+local StatsUI = require(uiFolder:WaitForChild("StatsUI"))
+local InputController = require(inputFolder:WaitForChild("InputController"))
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")

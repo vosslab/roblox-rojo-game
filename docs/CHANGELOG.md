@@ -14,3 +14,7 @@
 - Add a merry-go-round spin prompt and server-driven spin control via E push.
 - Add a visible spin marker and rotate the merry-go-round around the base center for clearer motion debugging.
 - Refactor merry-go-round control into `World/Interactables/MerryGoRound.lua` to keep quest logic focused on progression.
+- Remove stale playground caching for quest lookups and add rotation debug prints with SpinMarker position checks.
+- Add safe requires in Main, fix ClientMain UI module requires, and make SaveService safe at require-time.
+- Add Shared/Util and Shared/Types plus Dev diagnostics modules with Studio-only loading.
+- Gate merry-go-round debug prints behind a debug flag, soften the spin marker, and tune spin impulse/friction.

@@ -5,12 +5,35 @@ local SaveService = {}
 local DATASTORE_NAME = "IdleTycoonSave_v1"
 local MAX_RETRIES = 2
 
-local store = DataStoreService:GetDataStore(DATASTORE_NAME)
+local store = nil
+
+local function getStore()
+  if store then
+    return store
+  end
+
+  local ok, result = pcall(function()
+    return DataStoreService:GetDataStore(DATASTORE_NAME)
+  end)
+
+  if not ok then
+    warn("[SaveService] GetDataStore failed:", result)
+    return nil
+  end
+
+  store = result
+  return store
+end
 
 function SaveService.Load(player)
+  local currentStore = getStore()
+  if not currentStore then
+    return nil
+  end
+
   local key = tostring(player.UserId)
   local ok, result = pcall(function()
-    return store:GetAsync(key)
+    return currentStore:GetAsync(key)
   end)
 
   if not ok then
@@ -22,12 +45,17 @@ function SaveService.Load(player)
 end
 
 function SaveService.Save(player, data)
+  local currentStore = getStore()
+  if not currentStore then
+    return false
+  end
+
   local key = tostring(player.UserId)
   local attempts = 0
 
   while attempts <= MAX_RETRIES do
     local ok, err = pcall(function()
-      store:SetAsync(key, data)
+      currentStore:SetAsync(key, data)
     end)
 
     if ok then

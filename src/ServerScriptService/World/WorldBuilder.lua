@@ -1,5 +1,6 @@
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
 local shared = ReplicatedStorage:WaitForChild("Shared")
 local Constants = require(shared:WaitForChild("Constants"))
@@ -279,9 +280,14 @@ function WorldBuilder.ensurePlayground(baseplate, homeSpawn)
 
   local spinMarker = findOrCreatePart(merryModel, "SpinMarker", "Part")
   applyPhysics(spinMarker, true, false, false)
-  spinMarker.Size = Vector3.new(2, 1, 2)
-  spinMarker.Position = baseCenter + Vector3.new(8, 1.5, 0)
-  spinMarker.BrickColor = BrickColor.new("Bright blue")
+  spinMarker.Size = Vector3.new(1, 0.5, 1)
+  spinMarker.Position = baseCenter + Vector3.new(8, 1.25, 0)
+  spinMarker.BrickColor = BrickColor.new("Pastel blue")
+  if RunService:IsStudio() then
+    spinMarker.Transparency = 0.2
+  else
+    spinMarker.Transparency = 1
+  end
 
   local weld = merrySeat:FindFirstChildOfClass("WeldConstraint")
   if not weld then
