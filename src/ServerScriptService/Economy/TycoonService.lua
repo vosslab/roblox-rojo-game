@@ -90,16 +90,6 @@ local function ensureEconomy(player)
   return playerEconomy[player]
 end
 
-local function setEconomy(player, data)
-  local economy = ensureEconomy(player)
-  economy.coins = math.max(0, data.coins or economy.coins)
-  economy.incomeRate = math.max(0, data.incomeRate or economy.incomeRate)
-  economy.upgradeLevel = math.max(0, data.upgradeLevel or economy.upgradeLevel)
-  economy.nextUpgradeCost = math.max(0, data.nextUpgradeCost or economy.nextUpgradeCost)
-
-  PlayerStatsService.SetEconomy(player, economy)
-end
-
 local function addCoins(player, amount)
   local economy = ensureEconomy(player)
   economy.coins = math.max(0, economy.coins + amount)

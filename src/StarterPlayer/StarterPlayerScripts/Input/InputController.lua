@@ -45,7 +45,11 @@ function InputController.Init(remoteTable)
   end
 
   workspace.DescendantAdded:Connect(function(child)
-    if child:IsA("ProximityPrompt") and child.Parent and CollectionService:HasTag(child.Parent, Constants.TAGS.QuestButton) then
+    if
+      child:IsA("ProximityPrompt")
+      and child.Parent
+      and CollectionService:HasTag(child.Parent, Constants.TAGS.QuestButton)
+    then
       connectPrompt(child)
     end
     if child:IsA("ProximityPrompt") and child.Name == "SpinPrompt" then

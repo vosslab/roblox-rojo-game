@@ -16,8 +16,8 @@ local function ensureGui(playerGui)
   if not statsLabel then
     statsLabel = Instance.new("TextLabel")
     statsLabel.Name = "StatsLabel"
-    statsLabel.Size = UDim2.new(0, 260, 0, 80)
-    statsLabel.Position = UDim2.new(0, 10, 0, 110)
+    statsLabel.Size = UDim2.fromOffset(260, 80)
+    statsLabel.Position = UDim2.fromOffset(10, 110)
     statsLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     statsLabel.BackgroundTransparency = 0.2
     statsLabel.TextColor3 = Color3.fromRGB(20, 20, 20)

@@ -18,9 +18,19 @@
 - Suggested top-level folders:
   - `ServerScriptService/Main.server.lua` for server entry.
   - `ServerScriptService/**` modules for services.
+  - `ServerScriptService/World/WorldBuilder.lua` as the world orchestrator.
+  - `ServerScriptService/World/Builders/**` for geometry-only builders (Parts, Models, folders).
+  - `ServerScriptService/World/Interactables/**` for physics/controllers (no geometry creation).
   - `ReplicatedStorage/Shared/**` for shared constants and types.
   - `StarterPlayerScripts/ClientMain.client.lua` for client entry.
   - `StarterPlayerScripts/UI/**` for UI code.
+
+## World building pattern
+- Keep `WorldBuilder.lua` tiny: ensure the `Playground` model exists, then call sub-builders.
+- Each builder exports a single function: `Build(playgroundModel, constants)`.
+- Builders are idempotent: find by name, update or create, never duplicate.
+- No gameplay logic inside builders. Only Instances and properties.
+- Interactables assume geometry exists by name and handle physics/input only.
 
 ## Ordering inside a file
 1) Services `local Players = game:GetService("Players")`

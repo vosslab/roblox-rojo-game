@@ -13,7 +13,7 @@ local function ensureArrow(screenGui)
   if not arrowGui then
     arrowGui = Instance.new("BillboardGui")
     arrowGui.Name = "YellowArrow"
-    arrowGui.Size = UDim2.new(0, 60, 0, 60)
+    arrowGui.Size = UDim2.fromOffset(60, 60)
     arrowGui.StudsOffset = Vector3.new(0, 5, 0)
     arrowGui.AlwaysOnTop = true
     arrowGui.Parent = screenGui
@@ -23,7 +23,7 @@ local function ensureArrow(screenGui)
   if not arrowLabel then
     arrowLabel = Instance.new("TextLabel")
     arrowLabel.Name = "ArrowLabel"
-    arrowLabel.Size = UDim2.new(1, 0, 1, 0)
+    arrowLabel.Size = UDim2.fromScale(1, 1)
     arrowLabel.BackgroundTransparency = 1
     arrowLabel.TextColor3 = Color3.fromRGB(255, 230, 0)
     arrowLabel.Font = Enum.Font.SourceSansBold

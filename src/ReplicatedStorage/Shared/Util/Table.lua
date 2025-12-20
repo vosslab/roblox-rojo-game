@@ -1,11 +1,7 @@
 local Table = {}
 
 function Table.ShallowCopy(source)
-  local copy = {}
-  for key, value in pairs(source) do
-    copy[key] = value
-  end
-  return copy
+  return table.clone(source)
 end
 
 function Table.DeepCopy(source)

@@ -51,7 +51,13 @@ local function fireStats(player, state)
   if not statsRemote then
     return
   end
-  statsRemote:FireClient(player, state.coins, state.incomeRate, state.upgradeLevel, state.nextUpgradeCost)
+  statsRemote:FireClient(
+    player,
+    state.coins,
+    state.incomeRate,
+    state.upgradeLevel,
+    state.nextUpgradeCost
+  )
 end
 
 function PlayerStatsService.Init(remotes)

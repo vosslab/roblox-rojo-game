@@ -1,4 +1,5 @@
 std = "roblox"
+exclude = ["src/ReplicatedStorage/TestEZ/**", "src/**/__tests__/**"]
 
 [lints]
 unused_variable = "warn"

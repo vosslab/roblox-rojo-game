@@ -12,6 +12,7 @@ local function safeRequire(moduleScript)
 end
 
 local WorldBuilder = safeRequire(script.Parent.World.WorldBuilder)
+local Slide = safeRequire(script.Parent.World.Interactables.Slide)
 local SaveService = safeRequire(script.Parent.Persistence.SaveService)
 local PlayerStatsService = safeRequire(script.Parent.Economy.PlayerStatsService)
 local TycoonService = safeRequire(script.Parent.Economy.TycoonService)
@@ -25,6 +26,10 @@ if WorldBuilder then
   local baseplate, homeSpawn = WorldBuilder.ensureBaseplateAndSpawn()
   WorldBuilder.ensurePlayground(baseplate, homeSpawn)
   remotes = WorldBuilder.ensureRemotes()
+end
+if Slide and Constants then
+  local playground = workspace:FindFirstChild(Constants.NAMES.Playground)
+  Slide.Init(playground, Constants)
 end
 
 if PlayerStatsService and remotes then

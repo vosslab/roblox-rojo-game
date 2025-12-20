@@ -18,8 +18,8 @@ local function ensureGui(playerGui)
   if not questLabel then
     questLabel = Instance.new("TextLabel")
     questLabel.Name = "QuestTextLabel"
-    questLabel.Size = UDim2.new(0, 320, 0, 90)
-    questLabel.Position = UDim2.new(0, 10, 0, 10)
+    questLabel.Size = UDim2.fromOffset(320, 90)
+    questLabel.Position = UDim2.fromOffset(10, 10)
     questLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     questLabel.BackgroundTransparency = 0.2
     questLabel.TextColor3 = Color3.fromRGB(20, 20, 20)
@@ -34,7 +34,7 @@ local function ensureGui(playerGui)
   if not toastLabel then
     toastLabel = Instance.new("TextLabel")
     toastLabel.Name = "ToastLabel"
-    toastLabel.Size = UDim2.new(0, 240, 0, 40)
+    toastLabel.Size = UDim2.fromOffset(240, 40)
     toastLabel.Position = UDim2.new(0.5, -120, 0, 120)
     toastLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 200)
     toastLabel.BackgroundTransparency = 0.15
@@ -50,7 +50,7 @@ local function ensureGui(playerGui)
   if not ageSplash then
     ageSplash = Instance.new("TextLabel")
     ageSplash.Name = "AgeSplash"
-    ageSplash.Size = UDim2.new(0, 360, 0, 80)
+    ageSplash.Size = UDim2.fromOffset(360, 80)
     ageSplash.Position = UDim2.new(0.5, -180, 0.5, -40)
     ageSplash.BackgroundColor3 = Color3.fromRGB(255, 245, 200)
     ageSplash.BackgroundTransparency = 0.1

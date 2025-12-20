@@ -8,6 +8,7 @@ local Constants = require(shared:WaitForChild("Constants"))
 local QuestDefinitions = require(script.Parent.QuestDefinitions)
 local PlayerStatsService = require(script.Parent.Parent.Economy.PlayerStatsService)
 local MerryGoRound = require(script.Parent.Parent.World.Interactables.MerryGoRound)
+local Swing = require(script.Parent.Parent.World.Interactables.Swing)
 
 local QuestService = {}
 
@@ -17,14 +18,12 @@ local NEXT_QUEST_ID = "Q2_PLACEHOLDER"
 local SWING_PUSH_GOAL = 10
 local SPIN_TIME_GOAL = 20
 
-local PUSH_DEBOUNCE = 0.35
 local MAX_INTERACT_DISTANCE = 10
 
 local SPIN_THRESHOLD = 0.8
 
 local remotes = {}
 local playerState = {}
-local lastPushTime = {}
 
 local function getPlaygroundObjects()
   local playground = workspace:FindFirstChild(Constants.NAMES.Playground)
@@ -35,7 +34,6 @@ local function getPlaygroundObjects()
 
   local objects = {
     swingArea = playground:FindFirstChild(Constants.NAMES.SwingArea),
-    swingSeat = playground:FindFirstChild(Constants.NAMES.SwingSeat, true),
     pushButton = playground:FindFirstChild(Constants.NAMES.PushButton),
   }
   return objects
@@ -66,18 +64,6 @@ local function withinDistance(player, target, maxDistance)
     return (root.Position - pivot).Magnitude <= maxDistance
   end
   return false
-end
-
-local function isSeatedOn(player, seat)
-  local character = player.Character
-  if not character then
-    return false
-  end
-  local humanoid = character:FindFirstChildOfClass("Humanoid")
-  if not humanoid then
-    return false
-  end
-  return humanoid.SeatPart == seat and seat.Occupant == humanoid
 end
 
 local function getObjectiveText(stage)
@@ -113,16 +99,6 @@ local function sendQuestState(player)
     SPIN_TIME_GOAL,
     getTargetName(state.stage)
   )
-end
-
-local function applySwingImpulse(player, seat)
-  local root = getRoot(player)
-  if not root then
-    return
-  end
-
-  local forward = seat.CFrame.LookVector
-  root.AssemblyLinearVelocity = root.AssemblyLinearVelocity + (forward * 22) + Vector3.new(0, 4, 0)
 end
 
 local function advanceToStage2(player)
@@ -170,18 +146,10 @@ local function handleSwingPush(player, target)
   if not withinDistance(player, target, MAX_INTERACT_DISTANCE) then
     return
   end
-  if not isSeatedOn(player, objects.swingSeat) then
+  if not Swing.Push(player) then
     return
   end
 
-  local now = os.clock()
-  local last = lastPushTime[player]
-  if last and (now - last) < PUSH_DEBOUNCE then
-    return
-  end
-  lastPushTime[player] = now
-
-  applySwingImpulse(player, objects.swingSeat)
   state.swingPushes += 1
 
   if state.swingPushes >= SWING_PUSH_GOAL then
@@ -196,7 +164,10 @@ local function handleSpinPush(player, target)
     return
   end
 
-  if not hasTag(target, Constants.TAGS.QuestTarget) and target.Name ~= Constants.NAMES.MerryGoRoundBase then
+  if
+    not hasTag(target, Constants.TAGS.QuestTarget)
+    and target.Name ~= Constants.NAMES.MerryGoRoundBase
+  then
     return
   end
   if not withinDistance(player, target, MAX_INTERACT_DISTANCE) then
@@ -223,7 +194,9 @@ local function onHeartbeat(dt)
   end
 
   if rider and playerState[rider] then
-    if MerryGoRound.IsRiding(rider) and math.abs(MerryGoRound.GetAngularSpeed()) > SPIN_THRESHOLD then
+    if
+      MerryGoRound.IsRiding(rider) and math.abs(MerryGoRound.GetAngularSpeed()) > SPIN_THRESHOLD
+    then
       local state = playerState[rider]
       state.spinTime += dt
 
@@ -244,6 +217,7 @@ function QuestService.Init(remoteTable)
   remotes = remoteTable
   local playground = workspace:FindFirstChild(Constants.NAMES.Playground)
   MerryGoRound.Init(playground, Constants, remotes)
+  Swing.Init(playground, Constants)
 
   remotes[Constants.REMOTES.RequestInteract].OnServerEvent:Connect(function(player, target, action)
     if action == "SwingPush" and typeof(target) == "Instance" then
@@ -291,7 +265,6 @@ end
 
 function QuestService.RemovePlayer(player)
   playerState[player] = nil
-  lastPushTime[player] = nil
 end
 
 return QuestService

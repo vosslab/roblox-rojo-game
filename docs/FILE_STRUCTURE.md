@@ -11,7 +11,9 @@
 ## src/
 - `ServerScriptService/`: server entry and server-side modules.
   - `Main.server.lua`: server entry point (wires services).
-  - `World/WorldBuilder.lua`: world geometry and required instances.
+  - `World/WorldBuilder.lua`: world build orchestrator.
+  - `World/Builders/`: geometry builders (sand, swing, slide, merry-go-round, paths).
+  - `World/Interactables/`: physics/controllers for world objects.
   - `Economy/`: coins, upgrades, and passive income.
   - `Quests/`: quest definitions and quest state logic.
   - `Persistence/`: DataStore load/save utilities.

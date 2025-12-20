@@ -18,3 +18,31 @@
 - Add safe requires in Main, fix ClientMain UI module requires, and make SaveService safe at require-time.
 - Add Shared/Util and Shared/Types plus Dev diagnostics modules with Studio-only loading.
 - Gate merry-go-round debug prints behind a debug flag, soften the spin marker, and tune spin impulse/friction.
+- Add Slide interactable to apply a gentle sliding impulse and WalkSpeed boost on the slide ramp.
+- Add `tests/run-lua-tests.sh` as a bash helper for running Lune/TestEZ tests.
+- Add `Brewfile` and document `brew bundle` for installing dev tooling.
+- Make `tests.luau` path joining self-contained for older Lune versions.
+- Add `INSTALL.md` and move `brew bundle` guidance there.
+- Move `INSTALL.md` into `docs/INSTALL.md`.
+- Expand `README.md` with purpose, quick start, and documentation links.
+- Make `tests.luau` robust to Lune versions that do not expose `roblox.game`.
+- Add `tests/run-selene.sh` and `tests/run-stylua.sh` for linting/formatting scripts.
+- Rename `tests/run-lua-tests.sh` to `tests/run-lune-tests.sh`.
+- Exclude TestEZ from Selene, allow undefined test globals, and fix Lune TestEZ require.
+- Add `tests/run-lua-tests.sh` as a compatibility shim for the renamed test runner.
+- Exclude __tests__ from Selene and use roblox.require in Lune tests.
+- Set global require for Lune tests, reduce Selene warnings, and clean unused helpers/UDim2 patterns.
+- Make slide impulses follow the ramp slope and require pressing E to activate sliding.
+- Enlarge the sandbox, add a fenced perimeter with a spawn opening, auto-slide down the ramp, and add merry-go-round poles.
+- Resize the fence to a smaller sandbox area and speed up slide impulses.
+- Expand the sand patch, place the fence on its edge with a gate facing the spawn, and increase slide speed.
+- Fix fence gate orientation lookup to use HomeSpawn instead of a missing spawn reference.
+- Ensure tycoon world instances (HouseModel, CoinSpawners, UpgradePad) are built to avoid Init waits.
+- Make swing interactable accept the SwingTopBar name to avoid missing-top-beam warnings.
+- Add a simple ladder to the slide for climbing back up.
+- Refactor world geometry into per-object builders under `World/Builders/` with `WorldBuilder` as orchestrator.
+- Document the world builder/interactable modular pattern in `docs/ROBLOX_LUA_STYLE.md`.
+- Move swing push/impulse logic into `World/Interactables/Swing.lua`.
+- Replace the Lune runner with a filesystem-based `tests/run.luau` smoke test entrypoint.
+- Fix `tests/run_all_tests.sh` to resolve helper scripts relative to its own location.
+- Add labeled output to `tests/run_all_tests.sh` for each test step.

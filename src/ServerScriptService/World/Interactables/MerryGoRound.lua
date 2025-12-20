@@ -131,11 +131,17 @@ function MerryGoRound.Update(dt)
 
     if cached.merryModel.PrimaryPart then
       local baseCf = cached.merryBase.CFrame
-      local newBase = CFrame.new(center) * CFrame.Angles(0, deltaAngle, 0) * CFrame.new(-center) * baseCf
+      local newBase = CFrame.new(center)
+        * CFrame.Angles(0, deltaAngle, 0)
+        * CFrame.new(-center)
+        * baseCf
       cached.merryModel:SetPrimaryPartCFrame(newBase)
     else
       local current = cached.merryModel:GetPivot()
-      local rotated = CFrame.new(center) * CFrame.Angles(0, deltaAngle, 0) * CFrame.new(-center) * current
+      local rotated = CFrame.new(center)
+        * CFrame.Angles(0, deltaAngle, 0)
+        * CFrame.new(-center)
+        * current
       cached.merryModel:PivotTo(rotated)
     end
 
