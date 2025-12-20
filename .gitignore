@@ -1,6 +1,7 @@
 # Compiled Lua sources
 luac.out
 *.rbxl
+*.lock
 
 # luarocks build files
 *.src.rock

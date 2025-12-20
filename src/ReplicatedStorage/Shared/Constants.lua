@@ -37,6 +37,9 @@ local Constants = {
     CoinSpawners = "CoinSpawners",
     UpgradePad = "UpgradePad",
   },
+  QUESTS = {
+    Q1_PLAYGROUND = "Q1_PLAYGROUND",
+  },
 }
 
 return Constants
