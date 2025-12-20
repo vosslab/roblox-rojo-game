@@ -3,8 +3,6 @@
 -- - Ensures the swing looks correct (hinge + visible ropes, stable seat)
 -- - Applies push impulse to the seat assembly (not the rider)
 
-local RunService = game:GetService("RunService")
-
 local Swing = {}
 
 local constants = nil

@@ -14,6 +14,13 @@ function SlideBuilder.Build(playground, constants)
 
   local GROUND_Y = context.surfaceY
   local slideModel = BuilderUtil.findOrCreateModel(playground, constants.NAMES.Slide)
+
+  for _, child in ipairs(slideModel:GetDescendants()) do
+    if child.Name:match("_Unexpected$") or child:IsA("TrussPart") then
+      child:Destroy()
+    end
+  end
+
   local SLIDE_X = context.playgroundCenter.X - 30
   local SLIDE_Z = context.playgroundCenter.Z - 10
   local PLATFORM_Y = GROUND_Y + 10

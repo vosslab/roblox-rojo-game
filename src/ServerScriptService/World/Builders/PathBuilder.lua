@@ -19,8 +19,10 @@ function PathBuilder.Build(playground, constants)
   local PATH_L = 8
   local PATH_GAP = 0.5
   local stepDistance = PATH_L + PATH_GAP
-  local startPos = Vector3.new(context.homeSpawn.Position.X, context.surfaceY + 0.5, context.homeSpawn.Position.Z)
-  local endPos = Vector3.new(context.playgroundCenter.X, context.surfaceY + 0.5, context.playgroundCenter.Z)
+  local startPos =
+    Vector3.new(context.homeSpawn.Position.X, context.surfaceY + 0.5, context.homeSpawn.Position.Z)
+  local endPos =
+    Vector3.new(context.playgroundCenter.X, context.surfaceY + 0.5, context.playgroundCenter.Z)
   local pathAxis = (endPos - startPos).Unit
 
   local lastPos = nil

@@ -42,6 +42,9 @@
 - Add a simple ladder to the slide for climbing back up.
 - Refactor world geometry into per-object builders under `World/Builders/` with `WorldBuilder` as orchestrator.
 - Document the world builder/interactable modular pattern in `docs/ROBLOX_LUA_STYLE.md`.
+- Remove an unused RunService require from Swing interactable.
+- Clean up old slide geometry (unexpected parts/trusses) during slide build.
+- Silence repeated DataStore warnings in Studio by skipping DataStore calls unless published.
 - Move swing push/impulse logic into `World/Interactables/Swing.lua`.
 - Replace the Lune runner with a filesystem-based `tests/run.luau` smoke test entrypoint.
 - Fix `tests/run_all_tests.sh` to resolve helper scripts relative to its own location.

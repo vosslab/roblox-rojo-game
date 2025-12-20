@@ -14,9 +14,11 @@ function MerryGoRoundBuilder.Build(playground, constants)
 
   local GROUND_Y = context.surfaceY
   local merryModel = BuilderUtil.findOrCreateModel(playground, constants.NAMES.MerryGoRound)
-  local baseCenter = Vector3.new(context.playgroundCenter.X + 30, GROUND_Y + 0.5, context.playgroundCenter.Z)
+  local baseCenter =
+    Vector3.new(context.playgroundCenter.X + 30, GROUND_Y + 0.5, context.playgroundCenter.Z)
 
-  local basePieces = BuilderUtil.findOrCreateModel(merryModel, constants.NAMES.MerryGoRoundBasePieces)
+  local basePieces =
+    BuilderUtil.findOrCreateModel(merryModel, constants.NAMES.MerryGoRoundBasePieces)
   for _, child in ipairs(basePieces:GetChildren()) do
     child:Destroy()
   end
@@ -37,7 +39,8 @@ function MerryGoRoundBuilder.Build(playground, constants)
     wedge.CFrame = CFrame.lookAt(position, position + outward) * CFrame.Angles(0, math.rad(90), 0)
   end
 
-  local merryBase = BuilderUtil.findOrCreatePart(merryModel, constants.NAMES.MerryGoRoundBase, "Part")
+  local merryBase =
+    BuilderUtil.findOrCreatePart(merryModel, constants.NAMES.MerryGoRoundBase, "Part")
   BuilderUtil.applyPhysics(merryBase, true, false, false)
   merryBase.Size = Vector3.new(18, 1, 18)
   merryBase.CFrame = CFrame.new(baseCenter)
@@ -63,7 +66,8 @@ function MerryGoRoundBuilder.Build(playground, constants)
   spinPrompt.HoldDuration = 0
   spinPrompt.MaxActivationDistance = 10
 
-  local merrySeat = BuilderUtil.findOrCreatePart(merryModel, constants.NAMES.MerryGoRoundSeat, "Seat")
+  local merrySeat =
+    BuilderUtil.findOrCreatePart(merryModel, constants.NAMES.MerryGoRoundSeat, "Seat")
   BuilderUtil.applyPhysics(merrySeat, false, true, false)
   merrySeat.Size = Vector3.new(2, 1, 2)
   merrySeat.CFrame = CFrame.new(baseCenter + Vector3.new(0, 1.5, 0))

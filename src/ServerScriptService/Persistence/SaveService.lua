@@ -1,4 +1,5 @@
 local DataStoreService = game:GetService("DataStoreService")
+local RunService = game:GetService("RunService")
 
 local SaveService = {}
 
@@ -6,10 +7,19 @@ local DATASTORE_NAME = "IdleTycoonSave_v1"
 local MAX_RETRIES = 2
 
 local store = nil
+local warnedStudio = false
 
 local function getStore()
   if store then
     return store
+  end
+
+  if RunService:IsStudio() then
+    if not warnedStudio then
+      warnedStudio = true
+      warn("[SaveService] DataStore disabled in Studio. Publish the place to enable saving.")
+    end
+    return nil
   end
 
   local ok, result = pcall(function()
