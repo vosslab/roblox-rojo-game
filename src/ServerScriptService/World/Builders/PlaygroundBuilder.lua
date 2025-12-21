@@ -91,6 +91,20 @@ function PlaygroundBuilder.Build(playground, constants)
   buildHorizontal("FenceSouthA", "FenceSouthB", southZ, gateSide == "South")
   buildVertical("FenceEastA", "FenceEastB", eastX, gateSide == "East")
   buildVertical("FenceWestA", "FenceWestB", westX, gateSide == "West")
+
+  local spawnOffset = 6
+  local spawnY = context.groundY + 3
+  local spawnPos = context.homeSpawn.Position
+  if gateSide == "North" then
+    spawnPos = Vector3.new(sandPatch.Position.X, spawnY, northZ + spawnOffset)
+  elseif gateSide == "South" then
+    spawnPos = Vector3.new(sandPatch.Position.X, spawnY, southZ - spawnOffset)
+  elseif gateSide == "East" then
+    spawnPos = Vector3.new(eastX + spawnOffset, spawnY, sandPatch.Position.Z)
+  else
+    spawnPos = Vector3.new(westX - spawnOffset, spawnY, sandPatch.Position.Z)
+  end
+  context.homeSpawn.Position = spawnPos
 end
 
 return PlaygroundBuilder

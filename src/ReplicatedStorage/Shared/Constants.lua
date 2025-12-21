@@ -11,6 +11,7 @@ local Constants = {
     QuestTarget = "QuestTarget",
     QuestMount = "QuestMount",
     QuestButton = "QuestButton",
+    SchoolDoor = "SchoolDoor",
   },
   NAMES = {
     Baseplate = "Baseplate",

@@ -59,28 +59,21 @@ function SwingBuilder.Build(playground, constants)
 
   local beamHeight = 10
   local beamLength = 12
-  local swingSetCenter = Vector3.new(swingArea.Position.X, groundY, swingArea.Position.Z - 4)
+  local swingSetCenter = Vector3.new(swingArea.Position.X, groundY, swingArea.Position.Z)
   local ropeLength = 6
+
+  local toSpawn = context.homeSpawn.Position - swingSetCenter
+  local forward =
+    (toSpawn.Magnitude > 0.1 and Vector3.new(toSpawn.X, 0, toSpawn.Z).Unit) or Vector3.new(0, 0, -1)
+  local baseCFrame = CFrame.lookAt(swingSetCenter, swingSetCenter + forward)
 
   leftPost.Size = Vector3.new(1, beamHeight, 1)
   rightPost.Size = Vector3.new(1, beamHeight, 1)
   topBar.Size = Vector3.new(beamLength, 1, 1)
 
-  leftPost.CFrame = CFrame.new(
-    Vector3.new(
-      swingSetCenter.X - (beamLength / 2) + 1,
-      groundY + (beamHeight / 2),
-      swingSetCenter.Z
-    )
-  )
-  rightPost.CFrame = CFrame.new(
-    Vector3.new(
-      swingSetCenter.X + (beamLength / 2) - 1,
-      groundY + (beamHeight / 2),
-      swingSetCenter.Z
-    )
-  )
-  topBar.CFrame = CFrame.new(Vector3.new(swingSetCenter.X, groundY + 10, swingSetCenter.Z))
+  leftPost.CFrame = baseCFrame * CFrame.new(-(beamLength / 2) + 1, beamHeight / 2, 0)
+  rightPost.CFrame = baseCFrame * CFrame.new((beamLength / 2) - 1, beamHeight / 2, 0)
+  topBar.CFrame = baseCFrame * CFrame.new(0, 10, 0)
 
   leftPost.Material = Enum.Material.Metal
   rightPost.Material = Enum.Material.Metal
@@ -90,7 +83,9 @@ function SwingBuilder.Build(playground, constants)
   rightPost.BrickColor = BrickColor.new("Dark stone grey")
   topBar.BrickColor = BrickColor.new("Dark stone grey")
 
-  swingSeat.CFrame = CFrame.new(Vector3.new(topBar.Position.X, groundY + 2.5, topBar.Position.Z))
+  swingSeat.CFrame = baseCFrame * CFrame.new(0, 2.0, 0)
+
+  pushButton.CFrame = baseCFrame * CFrame.new(6, 0.5, 0)
 
   local ropeTopLeft =
     BuilderUtil.findOrCreateAttachment(topBar, "RopeTopLeft", Vector3.new(-1.5, -1.5, 0))

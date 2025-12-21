@@ -46,6 +46,12 @@
 - Clean up old slide geometry (unexpected parts/trusses) during slide build.
 - Remove any leftover slide truss parts under the playground to eliminate the blocking platform.
 - Remove any leftover LadderTopStep parts from the slide ladder build.
+- Reorient the swing set to face the spawn so pushes rock it forward/back normally.
+- Set the swing seat height to waist level for a Roblox character.
+- Move HomeSpawn outside the sand fence near the gate opening.
+- Add a simple Bloxsburg School building with rooms 100-103 and an entrance sign.
+- Expand the school to 80x30 with hallway/room bays and interactive doors with open prompts.
+- Add door windows that move with the door panels.
 - Silence repeated DataStore warnings in Studio by skipping DataStore calls unless published.
 - Move swing push/impulse logic into `World/Interactables/Swing.lua`.
 - Replace the Lune runner with a filesystem-based `tests/run.luau` smoke test entrypoint.

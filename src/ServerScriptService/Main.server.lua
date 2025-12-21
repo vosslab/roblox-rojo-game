@@ -13,6 +13,7 @@ end
 
 local WorldBuilder = safeRequire(script.Parent.World.WorldBuilder)
 local Slide = safeRequire(script.Parent.World.Interactables.Slide)
+local SchoolDoors = safeRequire(script.Parent.World.Interactables.SchoolDoors)
 local SaveService = safeRequire(script.Parent.Persistence.SaveService)
 local PlayerStatsService = safeRequire(script.Parent.Economy.PlayerStatsService)
 local TycoonService = safeRequire(script.Parent.Economy.TycoonService)
@@ -30,6 +31,9 @@ end
 if Slide and Constants then
   local playground = workspace:FindFirstChild(Constants.NAMES.Playground)
   Slide.Init(playground, Constants)
+end
+if SchoolDoors and Constants then
+  SchoolDoors.Init(Constants)
 end
 
 if PlayerStatsService and remotes then
