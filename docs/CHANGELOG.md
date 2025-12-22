@@ -1,6 +1,9 @@
 # Changelog
 
 ## 2025-12-22
+- Define shared height layers in LayoutUtil and use them in gas station stacking.
+- Add stacking helpers to LayoutUtil and use them to reduce floor overlap issues.
+- Offset gas station cooler doors to avoid z-fighting and keep car/store aligned to base height.
 - Nudge the gas station again toward center to keep it away from the corner.
 - Nudge the gas station location again toward center to keep it away from the corner.
 - Move the gas station closer to center while keeping it clear of the school.

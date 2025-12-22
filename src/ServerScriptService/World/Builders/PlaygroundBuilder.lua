@@ -1,4 +1,5 @@
 local BuilderUtil = require(script.Parent.BuilderUtil)
+local LayoutUtil = require(script.Parent.LayoutUtil)
 
 local PlaygroundBuilder = {}
 
@@ -117,10 +118,8 @@ function PlaygroundBuilder.Build(playground, constants)
 
   local spawnPadSize = Vector3.new(6, 1, 6)
   local padLift = 0.05
-  local spawnPadY = spawnPlatform.Position.Y
-    + (spawnPlatformSize.Y / 2)
-    + (spawnPadSize.Y / 2)
-    + padLift
+  local spawnPadY = LayoutUtil.getStackedCenterY(spawnPlatform, spawnPadSize.Y, padLift)
+    or spawnPlatform.Position.Y + (spawnPlatformSize.Y / 2) + (spawnPadSize.Y / 2) + padLift
   local gridX = 3
   local gridZ = 2
   local spacing = 8

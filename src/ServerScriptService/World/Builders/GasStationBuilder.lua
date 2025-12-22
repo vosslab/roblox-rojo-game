@@ -1,4 +1,5 @@
 local BuilderUtil = require(script.Parent.BuilderUtil)
+local LayoutUtil = require(script.Parent.LayoutUtil)
 local RoomBuilder = require(script.Parent.RoomBuilder)
 
 local GasStationBuilder = {}
@@ -232,10 +233,10 @@ local function buildStore(model, baseCFrame, centerLocal, storeSize, baseHeight,
     local coolerDoor =
       BuilderUtil.findOrCreatePart(model, "SodaCoolerDoor" .. index, "Part")
     BuilderUtil.applyPhysics(coolerDoor, true, false, false)
-    coolerDoor.Size = Vector3.new(0.2, coolerSize.Y - 0.5, coolerSize.Z - 0.4)
+    coolerDoor.Size = Vector3.new(0.15, coolerSize.Y - 0.5, coolerSize.Z - 0.4)
     coolerDoor.CFrame = toWorldCFrame(
       baseCFrame,
-      Vector3.new(coolerX + (coolerSize.X / 2) + 0.11, coolerY, coolerZ)
+      Vector3.new(coolerX + (coolerSize.X / 2) + 0.25, coolerY, coolerZ)
     )
     coolerDoor.Material = Enum.Material.Glass
     coolerDoor.Transparency = 0.4
@@ -279,12 +280,20 @@ function GasStationBuilder.Build(_playground, constants)
   base.CFrame = toWorldCFrame(baseCFrame, Vector3.new(0, base.Size.Y / 2, 0))
   stylePad(base, "Dark stone grey")
 
+  local baseTopLocal =
+    (LayoutUtil.getTopSurfaceY(base, 0) or (baseCFrame.Position.Y + base.Size.Y))
+    - baseCFrame.Position.Y
+  local asphaltOffset = LayoutUtil.getLayerOffset("asphalt")
+  local roomOffset = LayoutUtil.getLayerOffset("room_floor")
+
   local forecourt = BuilderUtil.findOrCreatePart(model, "Forecourt", "Part")
   BuilderUtil.applyPhysics(forecourt, true, true, false)
   local forecourtLength = math.max(26, padLength - 58)
   forecourt.Size = Vector3.new(padWidth - 16, 1, forecourtLength)
-  local forecourtCenter =
-    Vector3.new(-8, base.Size.Y + (forecourt.Size.Y / 2) + 0.02, -30)
+  local forecourtY = LayoutUtil.getStackedCenterY(base, forecourt.Size.Y, asphaltOffset)
+  local forecourtLocalY = forecourtY and (forecourtY - baseCFrame.Position.Y)
+    or (base.Size.Y + (forecourt.Size.Y / 2) + asphaltOffset)
+  local forecourtCenter = Vector3.new(-8, forecourtLocalY, -30)
   forecourt.CFrame = toWorldCFrame(baseCFrame, forecourtCenter)
   stylePad(forecourt, "Medium stone grey")
 
@@ -357,9 +366,9 @@ function GasStationBuilder.Build(_playground, constants)
     0,
     (padLength / 2) - (storeSize.Z / 2) - storeMargin
   )
-  buildStore(model, baseCFrame, storeCenter, storeSize, base.Size.Y, constants)
+  buildStore(model, baseCFrame, storeCenter, storeSize, baseTopLocal + roomOffset, constants)
 
-  buildCar(model, baseCFrame, Vector3.new(10, base.Size.Y, canopyCenter.Z + 6))
+  buildCar(model, baseCFrame, Vector3.new(10, baseTopLocal + asphaltOffset, canopyCenter.Z + 6))
 end
 
 return GasStationBuilder

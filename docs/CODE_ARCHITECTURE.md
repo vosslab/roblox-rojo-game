@@ -50,14 +50,19 @@
   - Compute ground and surface Y using the baseplate.
   - Provide a thin wrapper for CityLayout anchors.
   - Normalize positioning on the surface for consistent Y offsets.
+  - Provide shared layer offsets to reduce z-fighting on stacked floors.
 - Key API:
   - `getGroundY(baseplate)`.
+  - `getLayerOffset(layerKey)` and `getLayerY(baseplate, layerKey)`.
   - `getSurfaceY(baseplate, thickness)`.
   - `anchor(layout, zoneName, side, offset)`.
   - `placeOnSurface(position, surfaceY, yOffset)`.
+  - `getTopSurfaceY(referencePart, gap)`, `getStackedCenterY(referencePart, height, gap)`.
+  - `placeAbove(referencePart, position, height, gap)`.
 - When to use:
   - Any time you need to align a part to the baseplate surface.
   - Any time you need a stable anchor on a zone edge.
+  - Any time you need a stable vertical layer (baseplate, asphalt, room floor).
 
 ### WallBuilder
 - Location: `src/ServerScriptService/World/Builders/WallBuilder.lua`.
@@ -94,6 +99,14 @@
 - `WorldBuilder.lua` is the orchestrator; each builder exports `Build(playground, constants)`.
 - Builders should be idempotent: find existing items by name and update them in place.
 - Geometry stays in Builders; movement/interaction goes in Interactables.
+
+## Height layers
+- LayoutUtil defines shared layer offsets for stacked surfaces:
+  - `baseplate` = 0
+  - `asphalt` = 1
+  - `room_floor` = 2
+- `LayoutUtil.LAYER_UNIT` defines the stud height for one layer (currently 0.2 studs).
+- Use `getLayerOffset` and `getStackedCenterY` to avoid overlapping floors and z-fighting.
 
 ## Interactables
 - Location: `src/ServerScriptService/World/Interactables/`.
