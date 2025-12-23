@@ -78,7 +78,7 @@ local function clearPartsByPrefix(model, prefix)
 end
 
 
-House.DEFAULT_SIZE = Vector3.new(42, DEFAULT_FLOOR_HEIGHT * 2, 34)
+House.DEFAULT_SIZE = Vector3.new(48, DEFAULT_FLOOR_HEIGHT * 2, 38)
 
 function House.new(config)
   config = config or {}
@@ -156,12 +156,45 @@ function House:Build(parent, baseCFrame)
   floor.Material = Enum.Material.SmoothPlastic
   floor.BrickColor = self.floorColor
 
-  local roof = BuilderUtil.findOrCreatePart(houseModel, "Roof", "Part")
-  BuilderUtil.applyPhysics(roof, true, true, false)
-  roof.Size = Vector3.new(self.size.X + 4, ROOF_THICKNESS, self.size.Z + 4)
-  roof.CFrame = houseCFrame * CFrame.new(0, wallHeight + (ROOF_THICKNESS / 2), 0)
-  roof.Material = Enum.Material.SmoothPlastic
-  roof.BrickColor = self.roofColor
+  local existingRoof = houseModel:FindFirstChild("Roof")
+  if existingRoof and existingRoof:IsA("BasePart") then
+    existingRoof:Destroy()
+  end
+
+  local roofModel = BuilderUtil.findOrCreateModel(houseModel, "Roof")
+  local roofOverhang = 2
+  local roofRise = math.max(6, floorHeight * 0.6)
+  local roofThickness = math.max(0.4, ROOF_THICKNESS)
+  local roofDepth = depth + (roofOverhang * 2)
+  local roofHalfWidth = (width / 2) + roofOverhang
+  local slopeLength = math.sqrt((roofHalfWidth * roofHalfWidth) + (roofRise * roofRise))
+  local slopeAngle = math.atan2(roofRise, roofHalfWidth)
+  local ridgeY = wallHeight + roofRise
+  local panelCenterY = wallHeight + (roofRise / 2)
+  local panelOffsetX = roofHalfWidth / 2
+
+  local function buildRoofPanel(name, sign)
+    local panel = BuilderUtil.findOrCreatePart(roofModel, name, "Part")
+    BuilderUtil.applyPhysics(panel, true, true, false)
+    panel.Size = Vector3.new(slopeLength, roofThickness, roofDepth)
+    panel.Material = Enum.Material.SmoothPlastic
+    panel.BrickColor = self.roofColor
+
+    local tilt = CFrame.fromAxisAngle(front, slopeAngle * sign)
+    local base = houseCFrame
+      * CFrame.new(layoutOffset(right, front, panelOffsetX * sign, panelCenterY, 0))
+    panel.CFrame = base * tilt
+  end
+
+  buildRoofPanel("RoofLeft", -1)
+  buildRoofPanel("RoofRight", 1)
+
+  local ridge = BuilderUtil.findOrCreatePart(roofModel, "RoofRidge", "Part")
+  BuilderUtil.applyPhysics(ridge, true, true, false)
+  ridge.Size = Vector3.new(roofThickness, roofThickness, roofDepth)
+  ridge.Material = Enum.Material.SmoothPlastic
+  ridge.BrickColor = self.roofColor
+  ridge.CFrame = houseCFrame * CFrame.new(0, ridgeY, 0)
 
   local existingSecondFloor = houseModel:FindFirstChild("SecondFloor")
   if existingSecondFloor and existingSecondFloor:IsA("BasePart") then
@@ -247,18 +280,18 @@ function House:Build(parent, baseCFrame)
     local upperBaseCFrame = houseCFrame * CFrame.new(0, floorHeight + FLOOR_THICKNESS, 0)
     local upperCenterY = upperWallHeight / 2
 
-    local bathWidth = 10
-    local bathDepth = 8
-    local bathFront = backEdge + bathDepth
+    local bathWidth = math.min(12, width * 0.35)
+    local bathDepth = math.min(10, depth * 0.28)
+    local bathBackZ = frontEdge - bathDepth
     local bathCenterX = leftEdge + (bathWidth / 2)
-    local bathCenterZ = backEdge + (bathDepth / 2)
+    local bathCenterZ = frontEdge - (bathDepth / 2)
     local bathSideX = leftEdge + bathWidth
 
     local bathFrames = WallBuilder.buildWall({
       model = houseModel,
       namePrefix = "BathFrontWall",
       baseCFrame = houseCFrame,
-      center = layoutOffset(right, front, bathCenterX, floorHeight / 2, bathFront),
+      center = layoutOffset(right, front, bathCenterX, floorHeight / 2, bathBackZ),
       length = bathWidth,
       height = floorHeight,
       thickness = WALL_THICKNESS,
@@ -313,11 +346,11 @@ function House:Build(parent, baseCFrame)
       )
     end
 
-    local hallDepth = math.max(14, math.min(depth - 12, 22))
-    local backDividerZ = frontEdge - hallDepth
+    local hallDepth = math.max(12, math.min(depth * 0.35, 16))
+    local hallBackZ = frontEdge - hallDepth
 
     local bedroomWidth = width / 3
-    local bedroomDepth = backDividerZ - backEdge
+    local bedroomDepth = hallBackZ - backEdge
     local bedroomCenterZ = backEdge + (bedroomDepth / 2)
 
     local doorOffsets = {
@@ -340,7 +373,7 @@ function House:Build(parent, baseCFrame)
       model = houseModel,
       namePrefix = "UpperBackWall",
       baseCFrame = upperBaseCFrame,
-      center = layoutOffset(right, front, 0, upperCenterY, backDividerZ),
+      center = layoutOffset(right, front, 0, upperCenterY, hallBackZ),
       length = width,
       height = upperWallHeight,
       thickness = WALL_THICKNESS,
@@ -533,21 +566,19 @@ function House:Build(parent, baseCFrame)
   local windowLowerY = math.min(wallHeight - 2, 6)
   local windowUpperY = math.min(wallHeight - 2, floorHeight + 6)
   local windowInset = (WINDOW_THICKNESS / 2) + 0.05
-  local windowFront = frontEdge + windowInset
   local windowOffset = width / 4
-  local windowSizeX
-  local windowSizeZ
-  if frontAxis == "x" then
-    windowSizeX = WINDOW_THICKNESS
-    windowSizeZ = WINDOW_WIDTH
-  else
-    windowSizeX = WINDOW_WIDTH
-    windowSizeZ = WINDOW_THICKNESS
+
+  local function sizeForAxis(axis)
+    if axis == "x" then
+      return WINDOW_THICKNESS, WINDOW_WIDTH
+    end
+    return WINDOW_WIDTH, WINDOW_THICKNESS
   end
 
-  local function buildWindow(name, x, y)
-    local offset = layoutOffset(right, front, x, y, windowFront)
-    local windowSize = Vector3.new(windowSizeX, WINDOW_HEIGHT, windowSizeZ)
+  local function buildWindow(name, axis, x, y, z)
+    local sizeX, sizeZ = sizeForAxis(axis)
+    local offset = layoutOffset(right, front, x, y, z)
+    local windowSize = Vector3.new(sizeX, WINDOW_HEIGHT, sizeZ)
     WindowBuilder.buildPanelWindow(
       houseModel,
       name,
@@ -557,10 +588,24 @@ function House:Build(parent, baseCFrame)
     )
   end
 
-  buildWindow("WindowFrontLeftLower", -windowOffset, windowLowerY)
-  buildWindow("WindowFrontRightLower", windowOffset, windowLowerY)
-  buildWindow("WindowFrontLeftUpper", -windowOffset, windowUpperY)
-  buildWindow("WindowFrontRightUpper", windowOffset, windowUpperY)
+  local frontZ = frontEdge + windowInset
+  local backZ = backEdge - windowInset
+  local leftX = leftEdge - windowInset
+  local rightX = halfWidth + windowInset
+  local sideDepth = 0
+
+  buildWindow("WindowFrontLeftLower", frontAxis, -windowOffset, windowLowerY, frontZ)
+  buildWindow("WindowFrontRightLower", frontAxis, windowOffset, windowLowerY, frontZ)
+  buildWindow("WindowFrontLeftUpper", frontAxis, -windowOffset, windowUpperY, frontZ)
+  buildWindow("WindowFrontRightUpper", frontAxis, windowOffset, windowUpperY, frontZ)
+
+  buildWindow("WindowBackLower", frontAxis, 0, windowLowerY, backZ)
+  buildWindow("WindowBackUpper", frontAxis, 0, windowUpperY, backZ)
+
+  buildWindow("WindowLeftLower", rightAxis, leftX, windowLowerY, sideDepth)
+  buildWindow("WindowLeftUpper", rightAxis, leftX, windowUpperY, sideDepth)
+  buildWindow("WindowRightLower", rightAxis, rightX, windowLowerY, sideDepth)
+  buildWindow("WindowRightUpper", rightAxis, rightX, windowUpperY, sideDepth)
 
   return self:getFootprint()
 end

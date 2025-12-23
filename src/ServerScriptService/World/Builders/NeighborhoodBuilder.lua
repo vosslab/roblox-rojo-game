@@ -36,12 +36,33 @@ function NeighborhoodBuilder.Build(playground, constants)
 
   local houseSize = House.DEFAULT_SIZE
   local cols = 4
-  local rows = 3
-  local streetWidth = 14
-  local spacingX = houseSize.X + streetWidth
-  local spacingZ = houseSize.Z + streetWidth
+  local rows = 4
+  local gap = 8
+  local roadWidth = 8
+  local spacingX = houseSize.X + gap
   local gridWidth = (cols - 1) * spacingX
   local totalWidth = gridWidth + houseSize.X
+
+  local stepNoRoad = houseSize.Z + gap
+  local stepWithRoad = houseSize.Z + roadWidth + (gap * 2)
+  local rowOffsets = {}
+  local currentZ = 0
+  for row = 1, rows do
+    rowOffsets[row] = currentZ
+    if row < rows then
+      if row == 1 or row == 3 then
+        currentZ += stepWithRoad
+      else
+        currentZ += stepNoRoad
+      end
+    end
+  end
+  local spanZ = rowOffsets[rows] - rowOffsets[1]
+  local centerShiftZ = spanZ / 2
+  for row = 1, rows do
+    rowOffsets[row] -= centerShiftZ
+  end
+
   local zoneShiftX = (zoneWidth / 2) + 40 + math.max(0, (totalWidth - zoneWidth) / 2)
   local neighborhoodCenter = layout.neighborhoodCenter + Vector3.new(zoneShiftX, 0, 0)
   local baseCFrame = CFrame.lookAt(neighborhoodCenter, layout.spawnCenter, Vector3.new(0, 1, 0))
@@ -50,8 +71,6 @@ function NeighborhoodBuilder.Build(playground, constants)
   local streetThickness = 1
   local streetMaterial = Enum.Material.Asphalt
   local streetColor = BrickColor.new("Dark stone grey")
-  local gridDepth = (rows - 1) * spacingZ
-  local totalDepth = gridDepth + houseSize.Z
 
   local function buildStreetPart(name, sizeX, sizeZ, centerX, centerZ)
     local part = BuilderUtil.findOrCreatePart(streetModel, name, "Part")
@@ -62,26 +81,19 @@ function NeighborhoodBuilder.Build(playground, constants)
     part.BrickColor = streetColor
   end
 
-  for col = 1, cols - 1 do
-    local streetX = (col - ((cols + 1) / 2)) * spacingX + (spacingX / 2)
-    buildStreetPart(
-      string.format("StreetCol%02d", col),
-      streetWidth,
-      totalDepth + streetWidth,
-      streetX,
-      0
-    )
-  end
-
+  local roadCount = 0
   for row = 1, rows - 1 do
-    local streetZ = (row - ((rows + 1) / 2)) * spacingZ + (spacingZ / 2)
-    buildStreetPart(
-      string.format("StreetRow%02d", row),
-      totalWidth + streetWidth,
-      streetWidth,
-      0,
-      streetZ
-    )
+    if row == 1 or row == 3 then
+      roadCount += 1
+      local streetZ = (rowOffsets[row] + rowOffsets[row + 1]) / 2
+      buildStreetPart(
+        string.format("StreetRow%02d", roadCount),
+        totalWidth + (gap * 2),
+        roadWidth,
+        0,
+        streetZ
+      )
+    end
   end
 
   local palettes = {
@@ -126,7 +138,7 @@ function NeighborhoodBuilder.Build(playground, constants)
   local houseConfigs = {}
   local index = 0
   for row = 1, rows do
-    local rowOffsetZ = (row - ((rows + 1) / 2)) * spacingZ
+    local rowOffsetZ = rowOffsets[row]
     for col = 1, cols do
       index += 1
       local colOffsetX = (col - ((cols + 1) / 2)) * spacingX

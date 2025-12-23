@@ -27,6 +27,7 @@ function RoomBuilder.buildWalls(config)
   end
 
   local centerLocal = config.center
+  local wallThickness = config.wallThickness or 1
   local halfX = config.size.X / 2
   local halfZ = config.size.Z / 2
   local wallY = centerLocal.Y
@@ -43,9 +44,9 @@ function RoomBuilder.buildWalls(config)
     namePrefix = config.namePrefix .. "North",
     baseCFrame = config.baseCFrame,
     center = Vector3.new(centerLocal.X, wallY, northZ),
-    length = config.size.X,
+    length = config.size.X + wallThickness,
     height = config.size.Y,
-    thickness = config.wallThickness or 1,
+    thickness = wallThickness,
     axis = "x",
     wallColor = config.wallColor,
     material = config.material,
@@ -57,9 +58,9 @@ function RoomBuilder.buildWalls(config)
     namePrefix = config.namePrefix .. "South",
     baseCFrame = config.baseCFrame,
     center = Vector3.new(centerLocal.X, wallY, southZ),
-    length = config.size.X,
+    length = config.size.X + wallThickness,
     height = config.size.Y,
-    thickness = config.wallThickness or 1,
+    thickness = wallThickness,
     axis = "x",
     wallColor = config.wallColor,
     material = config.material,
@@ -71,9 +72,9 @@ function RoomBuilder.buildWalls(config)
     namePrefix = config.namePrefix .. "East",
     baseCFrame = config.baseCFrame,
     center = Vector3.new(eastX, wallY, centerLocal.Z),
-    length = config.size.Z,
+    length = config.size.Z + wallThickness,
     height = config.size.Y,
-    thickness = config.wallThickness or 1,
+    thickness = wallThickness,
     axis = "z",
     wallColor = config.wallColor,
     material = config.material,
@@ -85,9 +86,9 @@ function RoomBuilder.buildWalls(config)
     namePrefix = config.namePrefix .. "West",
     baseCFrame = config.baseCFrame,
     center = Vector3.new(westX, wallY, centerLocal.Z),
-    length = config.size.Z,
+    length = config.size.Z + wallThickness,
     height = config.size.Y,
-    thickness = config.wallThickness or 1,
+    thickness = wallThickness,
     axis = "z",
     wallColor = config.wallColor,
     material = config.material,

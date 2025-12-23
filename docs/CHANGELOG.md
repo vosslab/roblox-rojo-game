@@ -20,6 +20,7 @@
 - Add a window builder and place street grid sections between houses.
 - Convert school/gas station doors and school windows to shared door/window builders.
 - Move remaining school door window/frame helpers into shared builders.
+- Tighten room corners, add A-frame roofs, expand house windows, and restructure the neighborhood grid.
 
 ## 2025-12-22
 - Park the A-Chassis on the baseplate near the spawn area and align its base to the ground.
