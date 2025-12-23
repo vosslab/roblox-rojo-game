@@ -75,17 +75,16 @@ local function buildCar(model, baseCFrame, localPos)
   end
 end
 
-local function placeAChassis(baseCFrame, localCFrame)
+local function placeAChassis(targetCFrame, desiredMinY)
   local vehicles = workspace:FindFirstChild("Vehicles")
   local chassisModel = vehicles and vehicles:FindFirstChild("A-Chassis")
   if not chassisModel then
     chassisModel = workspace:FindFirstChild("A-Chassis")
   end
   if chassisModel and chassisModel:IsA("Model") then
-    local targetCFrame = baseCFrame * localCFrame
     local bboxCFrame, bboxSize = chassisModel:GetBoundingBox()
     local minY = bboxCFrame.Position.Y - (bboxSize.Y / 2)
-    local desiredY = targetCFrame.Position.Y + 1.5
+    local desiredY = desiredMinY or targetCFrame.Position.Y
     local lift = desiredY - minY
     chassisModel:PivotTo(targetCFrame + Vector3.new(0, lift, 0))
   end
@@ -414,14 +413,14 @@ function GasStationBuilder.Build(_playground, constants)
     )
   )
 
-  placeAChassis(
-    baseCFrame,
-    CFrame.new(
-      canopyCenter.X,
-      baseTopLocal + asphaltOffset,
-      canopyCenter.Z + math.min(10, forecourtLength / 2 - 6)
-    ) * CFrame.Angles(0, math.rad(90), 0)
-  )
+  local spawnAnchor = LayoutUtil.anchor(context.layout, "spawn", "east", 26)
+  local spawnCenter = context.layout.spawnCenter
+  local vehiclePos = spawnAnchor or (spawnCenter + Vector3.new(50, 0, 0))
+  local vehicleYaw = math.rad(-90)
+  local baseY = LayoutUtil.getLayerY(context.baseplate, "baseplate") or context.groundY
+  if baseY then
+    placeAChassis(CFrame.new(vehiclePos) * CFrame.Angles(0, vehicleYaw, 0), baseY)
+  end
 end
 
 return GasStationBuilder

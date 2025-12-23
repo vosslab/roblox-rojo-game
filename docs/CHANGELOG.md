@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2025-12-22
+- Park the A-Chassis on the baseplate near the spawn area and align its base to the ground.
 - Move the sanitized A-Chassis XML out of `src/` and use the binary model for Rojo builds.
 - Restrict ContentId conversions to known property names to avoid mis-typing script Source.
 - Expand rbxmx sanitizing to detect ContentId by suffix and strip raw control chars.
